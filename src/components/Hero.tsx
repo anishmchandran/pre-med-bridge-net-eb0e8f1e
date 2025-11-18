@@ -5,63 +5,73 @@ import heroImage from "@/assets/hero-image.jpg";
 
 const Hero = () => {
   return (
-    <section className="relative overflow-hidden">
-      {/* Background Image with Overlay */}
+    <section className="relative overflow-hidden min-h-[85vh] flex items-center">
+      {/* Premium Background with Gradient Overlay */}
       <div className="absolute inset-0 z-0">
         <img 
           src={heroImage} 
           alt="Medical research collaboration" 
           className="w-full h-full object-cover"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-primary/95 via-primary/85 to-primary/70" />
+        <div className="absolute inset-0 bg-gradient-to-br from-primary via-primary-hover to-primary/90" />
+        <div className="absolute inset-0 bg-gradient-to-t from-primary/50 via-transparent to-transparent" />
       </div>
 
       {/* Content */}
-      <div className="container relative z-10 py-20 md:py-32">
-        <div className="max-w-3xl">
-          <h1 className="text-4xl md:text-6xl font-bold text-primary-foreground mb-6 animate-fade-in">
-            Where Future Physicians Get Their Start
+      <div className="container relative z-10 py-24 md:py-32">
+        <div className="max-w-4xl mx-auto text-center">
+          <h1 className="text-5xl md:text-7xl font-semibold text-white mb-6 animate-fade-in-slow tracking-tight">
+            Where Future Physicians
+            <span className="block mt-2 bg-gradient-to-r from-accent-light to-accent bg-clip-text text-transparent">
+              Get Their Start
+            </span>
           </h1>
-          <p className="text-xl md:text-2xl text-primary-foreground/90 mb-8 animate-fade-in">
+          <p className="text-xl md:text-2xl text-white/90 mb-10 animate-fade-in max-w-2xl mx-auto leading-relaxed">
             Connect with research labs, clinical teams, and mentors — all in one place.
           </p>
           
-          <div className="flex flex-col sm:flex-row gap-4 mb-12 animate-slide-up">
+          <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 animate-slide-up">
             <Button 
-              size="lg" 
+              size="xl" 
+              variant="accent"
               asChild
-              className="bg-secondary hover:bg-secondary-dark text-secondary-foreground text-lg"
             >
               <Link to="/auth">
-                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+                Get Started Free <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
             </Button>
             <Button 
-              size="lg" 
+              size="xl" 
               variant="outline" 
               asChild
-              className="bg-background/10 backdrop-blur-sm border-primary-foreground/20 text-primary-foreground hover:bg-background/20"
+              className="bg-white/10 backdrop-blur-md border-white/30 text-white hover:bg-white/20 hover:border-white/50"
             >
               <Link to="/for-labs">For Labs & PIs</Link>
             </Button>
           </div>
 
-          {/* Quick Stats */}
-          <div className="grid grid-cols-3 gap-6 pt-8 border-t border-primary-foreground/20">
-            <div className="text-center">
-              <Search className="h-8 w-8 text-secondary mx-auto mb-2" />
-              <p className="text-2xl font-bold text-primary-foreground">500+</p>
-              <p className="text-sm text-primary-foreground/80">Opportunities</p>
+          {/* Premium Stats Grid */}
+          <div className="grid grid-cols-3 gap-8 pt-12 border-t border-white/20 max-w-3xl mx-auto">
+            <div className="group">
+              <div className="mb-3 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-accent/20 backdrop-blur-sm border border-accent/30 group-hover:bg-accent/30 transition-all">
+                <Search className="h-7 w-7 text-accent-light" />
+              </div>
+              <p className="text-3xl font-semibold text-white mb-1">500+</p>
+              <p className="text-sm text-white/70">Open Opportunities</p>
             </div>
-            <div className="text-center">
-              <Users className="h-8 w-8 text-secondary mx-auto mb-2" />
-              <p className="text-2xl font-bold text-primary-foreground">2,000+</p>
-              <p className="text-sm text-primary-foreground/80">Students</p>
+            <div className="group">
+              <div className="mb-3 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-accent/20 backdrop-blur-sm border border-accent/30 group-hover:bg-accent/30 transition-all">
+                <Users className="h-7 w-7 text-accent-light" />
+              </div>
+              <p className="text-3xl font-semibold text-white mb-1">2,000+</p>
+              <p className="text-sm text-white/70">Active Students</p>
             </div>
-            <div className="text-center">
-              <Award className="h-8 w-8 text-secondary mx-auto mb-2" />
-              <p className="text-2xl font-bold text-primary-foreground">100+</p>
-              <p className="text-sm text-primary-foreground/80">Partner Labs</p>
+            <div className="group">
+              <div className="mb-3 inline-flex items-center justify-center w-14 h-14 rounded-2xl bg-accent/20 backdrop-blur-sm border border-accent/30 group-hover:bg-accent/30 transition-all">
+                <Award className="h-7 w-7 text-accent-light" />
+              </div>
+              <p className="text-3xl font-semibold text-white mb-1">100+</p>
+              <p className="text-sm text-white/70">Partner Labs</p>
             </div>
           </div>
         </div>
