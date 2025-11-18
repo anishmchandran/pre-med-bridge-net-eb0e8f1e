@@ -1,0 +1,137 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* MedBridge Design System - Professional Medical Networking Platform */
+    
+    /* Core Brand Colors */
+    --background: 0 0% 100%;
+    --foreground: 210 19% 24%;  /* #2E3A45 - Neutral text */
+
+    --card: 0 0% 100%;
+    --card-foreground: 210 19% 24%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 210 19% 24%;
+
+    /* Navy Primary - Professional & Trustworthy */
+    --primary: 206 73% 20%;  /* #0F3557 */
+    --primary-foreground: 0 0% 100%;
+    --primary-light: 206 73% 35%;
+    --primary-dark: 206 73% 15%;
+
+    /* Teal Secondary - Call to Action */
+    --secondary: 178 74% 37%;  /* #1CA9A6 */
+    --secondary-foreground: 0 0% 100%;
+    --secondary-light: 178 74% 50%;
+    --secondary-dark: 178 74% 30%;
+
+    /* UI Elements */
+    --muted: 214 32% 91%;  /* #E2E8F0 */
+    --muted-foreground: 215 16% 47%;  /* #697586 */
+
+    --accent: 178 74% 37%;  /* Teal for highlights */
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 214 32% 82%;  /* #CBD5E1 */
+    --input: 214 32% 82%;
+    --ring: 178 74% 37%;
+
+    --radius: 0.5rem;
+
+    --sidebar-background: 0 0% 98%;
+
+    --sidebar-foreground: 240 5.3% 26.1%;
+
+    --sidebar-primary: 240 5.9% 10%;
+
+    --sidebar-primary-foreground: 0 0% 98%;
+
+    --sidebar-accent: 240 4.8% 95.9%;
+
+    --sidebar-accent-foreground: 240 5.9% 10%;
+
+    --sidebar-border: 220 13% 91%;
+
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+
+  .dark {
+    --background: 210 19% 24%;
+    --foreground: 0 0% 98%;
+
+    --card: 206 73% 15%;
+    --card-foreground: 0 0% 98%;
+
+    --popover: 206 73% 15%;
+    --popover-foreground: 0 0% 98%;
+
+    --primary: 178 74% 37%;
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 206 73% 35%;
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 206 73% 20%;
+    --muted-foreground: 214 32% 70%;
+
+    --accent: 178 74% 37%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 0 62% 50%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 206 73% 25%;
+    --input: 206 73% 25%;
+    --ring: 178 74% 50%;
+    --sidebar-background: 240 5.9% 10%;
+    --sidebar-foreground: 240 4.8% 95.9%;
+    --sidebar-primary: 224.3 76.3% 48%;
+    --sidebar-primary-foreground: 0 0% 100%;
+    --sidebar-accent: 240 3.7% 15.9%;
+    --sidebar-accent-foreground: 240 4.8% 95.9%;
+    --sidebar-border: 240 3.7% 15.9%;
+    --sidebar-ring: 217.2 91.2% 59.8%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-semibold tracking-tight;
+  }
+
+  h1 {
+    @apply text-4xl;
+  }
+
+  h2 {
+    @apply text-3xl;
+  }
+
+  h3 {
+    @apply text-xl;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
