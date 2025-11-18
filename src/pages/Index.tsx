@@ -2,20 +2,20 @@ import Navigation from "@/components/Navigation";
 import Hero from "@/components/Hero";
 import WhySection from "@/components/WhySection";
 import FeaturesGrid from "@/components/FeaturesGrid";
-import BenefitsSection from "@/components/BenefitsSection";
+import PathwaySection from "@/components/PathwaySection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import CTASection from "@/components/CTASection";
 import Footer from "@/components/Footer";
 
 const Index = () => {
   return (
-    <div className="min-h-screen">
+    <div className="min-h-screen bg-background">
       <Navigation />
       <main>
         <Hero />
         <WhySection />
         <FeaturesGrid />
-        <BenefitsSection />
+        <PathwaySection />
         <TestimonialsSection />
         <CTASection />
       </main>
