@@ -1,3 +1,4 @@
+import React from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { 
   FileText, 
@@ -55,24 +56,27 @@ const FeaturesGrid = () => {
   ];
 
   return (
-    <section className="py-20 bg-muted/30">
+    <section className="py-24 bg-background">
       <div className="container">
-        <div className="text-center mb-12">
-          <h2 className="text-3xl md:text-4xl font-bold text-primary mb-4">
-            Everything You Need in One Platform
+        <div className="text-center mb-16 max-w-3xl mx-auto">
+          <h2 className="text-4xl md:text-5xl font-semibold mb-6 tracking-tight">
+            Everything You Need
+            <span className="block mt-2 text-accent">in One Platform</span>
           </h2>
-          <p className="text-lg text-muted-foreground max-w-2xl mx-auto">
+          <p className="text-lg text-muted-foreground leading-relaxed">
             Built specifically for pre-med students and research opportunities
           </p>
         </div>
 
         <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
           {features.map((feature, index) => (
-            <Card key={index} className="border-border hover:border-secondary/50 transition-colors">
-              <CardContent className="pt-6">
-                <div className="mb-4 text-secondary">{feature.icon}</div>
-                <h3 className="font-semibold mb-2">{feature.title}</h3>
-                <p className="text-sm text-muted-foreground">{feature.description}</p>
+            <Card key={index} className="group border-border/50 hover:border-accent/30 hover:shadow-premium transition-all duration-300">
+              <CardContent className="pt-8 pb-6 px-6">
+                <div className="mb-5 inline-flex items-center justify-center w-12 h-12 rounded-xl bg-accent/10 group-hover:bg-accent/20 transition-all">
+                  {React.cloneElement(feature.icon, { className: "h-6 w-6 text-accent" })}
+                </div>
+                <h3 className="font-semibold mb-2.5 text-base group-hover:text-accent transition-colors">{feature.title}</h3>
+                <p className="text-sm text-muted-foreground leading-relaxed">{feature.description}</p>
               </CardContent>
             </Card>
           ))}
