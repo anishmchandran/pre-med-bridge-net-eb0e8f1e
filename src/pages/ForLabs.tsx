@@ -192,10 +192,10 @@ const ForLabs = () => {
       <section className="py-20 bg-gradient-to-r from-primary to-primary/80">
         <div className="container">
           <div className="max-w-3xl mx-auto text-center">
-            <h2 className="text-3xl md:text-5xl font-bold text-primary-foreground mb-6">
+            <h2 className="text-3xl md:text-5xl font-bold text-primary mb-6">
               Ready to Build Your Research Team?
             </h2>
-            <p className="text-xl text-primary-foreground/90 mb-8">
+            <p className="text-xl text-foreground mb-8">
               Join leading research labs using MedBridge to find exceptional student talent.
             </p>
             <Button size="lg" variant="secondary" asChild>
