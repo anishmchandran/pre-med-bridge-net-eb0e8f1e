@@ -15,10 +15,14 @@ export function DocumentsSection({ profileId, isOwnProfile }: DocumentsSectionPr
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
-    loadDocuments();
+    if (profileId) {
+      loadDocuments();
+    }
   }, [profileId]);
 
   const loadDocuments = async () => {
+    if (!profileId) return;
+    
     const { data } = await supabase.storage
       .from('profile-documents')
       .list(profileId);

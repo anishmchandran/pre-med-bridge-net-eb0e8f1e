@@ -15,10 +15,14 @@ export function EducationSection({ profileId, isOwnProfile }: EducationSectionPr
   const [showAddDialog, setShowAddDialog] = useState(false);
 
   useEffect(() => {
-    loadEducation();
+    if (profileId) {
+      loadEducation();
+    }
   }, [profileId]);
 
   const loadEducation = async () => {
+    if (!profileId) return;
+    
     const { data } = await supabase
       .from("education")
       .select("*")

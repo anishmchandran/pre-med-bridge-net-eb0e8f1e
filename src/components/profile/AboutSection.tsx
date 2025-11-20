@@ -17,6 +17,8 @@ export function AboutSection({ profile, isOwnProfile, onUpdate }: AboutSectionPr
   const [bio, setBio] = useState(profile?.bio || "");
   const [loading, setLoading] = useState(false);
 
+  if (!profile) return null;
+
   const handleSave = async () => {
     setLoading(true);
     try {

@@ -18,6 +18,8 @@ export function ResearchInterestsSection({ profileId, interests, isOwnProfile }:
   const [interestText, setInterestText] = useState(interests || "");
   const [loading, setLoading] = useState(false);
 
+  if (!profileId) return null;
+
   const handleSave = async () => {
     setLoading(true);
     try {
