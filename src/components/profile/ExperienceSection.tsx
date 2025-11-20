@@ -15,10 +15,14 @@ export function ExperienceSection({ profileId, isOwnProfile }: ExperienceSection
   const [showAddDialog, setShowAddDialog] = useState(false);
 
   useEffect(() => {
-    loadExperiences();
+    if (profileId) {
+      loadExperiences();
+    }
   }, [profileId]);
 
   const loadExperiences = async () => {
+    if (!profileId) return;
+    
     const { data } = await supabase
       .from("experiences")
       .select("*")

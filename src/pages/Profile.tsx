@@ -73,6 +73,20 @@ export default function Profile() {
     );
   }
 
+  if (!profile) {
+    return (
+      <div className="min-h-screen bg-background">
+        <Navigation />
+        <main className="container mx-auto px-4 py-8 max-w-7xl">
+          <div className="text-center">
+            <h1 className="text-2xl font-bold mb-4">Profile Not Found</h1>
+            <p className="text-muted-foreground">Unable to load profile. Please try refreshing the page.</p>
+          </div>
+        </main>
+      </div>
+    );
+  }
+
   const isPIProfile = profile?.title && profile?.department;
 
   return (

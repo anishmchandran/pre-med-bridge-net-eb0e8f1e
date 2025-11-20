@@ -16,10 +16,14 @@ export function CertificationsSection({ profileId, isOwnProfile }: Certification
   const [showAddDialog, setShowAddDialog] = useState(false);
 
   useEffect(() => {
-    loadCertifications();
+    if (profileId) {
+      loadCertifications();
+    }
   }, [profileId]);
 
   const loadCertifications = async () => {
+    if (!profileId) return;
+    
     const { data } = await supabase
       .from("certifications")
       .select("*")

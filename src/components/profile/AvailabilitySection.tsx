@@ -21,6 +21,8 @@ export function AvailabilitySection({ profileId, availability, isOwnProfile, onU
   const [schedule, setSchedule] = useState<any>(availability || {});
   const [loading, setLoading] = useState(false);
 
+  if (!profileId) return null;
+
   const toggleSlot = (day: string, slot: string) => {
     setSchedule((prev: any) => ({
       ...prev,

@@ -8,6 +8,8 @@ interface ContactSectionProps {
 }
 
 export function ContactSection({ profile, isOwnProfile }: ContactSectionProps) {
+  if (!profile) return null;
+
   return (
     <Card>
       <CardHeader>

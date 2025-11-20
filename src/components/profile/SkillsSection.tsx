@@ -19,6 +19,8 @@ export function SkillsSection({ profile, isOwnProfile, onUpdate }: SkillsSection
   const [newSkill, setNewSkill] = useState("");
   const [loading, setLoading] = useState(false);
 
+  if (!profile) return null;
+
   const handleAddSkill = () => {
     if (newSkill.trim() && !skills.includes(newSkill.trim())) {
       setSkills([...skills, newSkill.trim()]);
