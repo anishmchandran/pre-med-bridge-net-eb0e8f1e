@@ -25,6 +25,10 @@ export function EditProfileDialog({ profile, open, onOpenChange, onUpdate }: Edi
     year: profile?.year || "",
   });
 
+  if (!profile?.id) {
+    return null;
+  }
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
