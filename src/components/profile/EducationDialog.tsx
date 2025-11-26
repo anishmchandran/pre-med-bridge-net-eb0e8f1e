@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,14 +7,25 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-interface AddEducationDialogProps {
+interface EducationData {
+  id?: string;
+  school_name: string;
+  degree: string;
+  major: string;
+  graduation_year: number | null;
+  gpa: number | null;
+  gpa_visible: boolean;
+}
+
+interface EducationDialogProps {
   profileId: string;
+  education?: EducationData | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdate: () => void;
 }
 
-export function AddEducationDialog({ profileId, open, onOpenChange, onUpdate }: AddEducationDialogProps) {
+export function EducationDialog({ profileId, education, open, onOpenChange, onUpdate }: EducationDialogProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     school_name: "",
@@ -25,26 +36,59 @@ export function AddEducationDialog({ profileId, open, onOpenChange, onUpdate }: 
     gpa_visible: false,
   });
 
+  const isEditing = !!education?.id;
+
+  useEffect(() => {
+    if (education) {
+      setFormData({
+        school_name: education.school_name || "",
+        degree: education.degree || "",
+        major: education.major || "",
+        graduation_year: education.graduation_year?.toString() || "",
+        gpa: education.gpa?.toString() || "",
+        gpa_visible: education.gpa_visible || false,
+      });
+    } else {
+      setFormData({
+        school_name: "",
+        degree: "",
+        major: "",
+        graduation_year: "",
+        gpa: "",
+        gpa_visible: false,
+      });
+    }
+  }, [education, open]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = await supabase.from("education").insert([
-        {
-          user_id: profileId,
-          school_name: formData.school_name,
-          degree: formData.degree,
-          major: formData.major,
-          graduation_year: formData.graduation_year ? parseInt(formData.graduation_year) : null,
-          gpa: formData.gpa ? parseFloat(formData.gpa) : null,
-          gpa_visible: formData.gpa_visible,
-        },
-      ]);
+      const data = {
+        school_name: formData.school_name,
+        degree: formData.degree,
+        major: formData.major,
+        graduation_year: formData.graduation_year ? parseInt(formData.graduation_year) : null,
+        gpa: formData.gpa ? parseFloat(formData.gpa) : null,
+        gpa_visible: formData.gpa_visible,
+      };
 
-      if (error) throw error;
+      if (isEditing && education?.id) {
+        const { error } = await supabase
+          .from("education")
+          .update(data)
+          .eq("id", education.id);
+        if (error) throw error;
+        toast.success("Education updated successfully");
+      } else {
+        const { error } = await supabase.from("education").insert([
+          { ...data, user_id: profileId },
+        ]);
+        if (error) throw error;
+        toast.success("Education added successfully");
+      }
 
-      toast.success("Education added successfully");
       onUpdate();
       onOpenChange(false);
     } catch (error: any) {
@@ -58,7 +102,7 @@ export function AddEducationDialog({ profileId, open, onOpenChange, onUpdate }: 
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Education</DialogTitle>
+          <DialogTitle>{isEditing ? "Edit Education" : "Add Education"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -129,7 +173,7 @@ export function AddEducationDialog({ profileId, open, onOpenChange, onUpdate }: 
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Adding..." : "Add Education"}
+              {loading ? "Saving..." : isEditing ? "Save Changes" : "Add Education"}
             </Button>
           </div>
         </form>

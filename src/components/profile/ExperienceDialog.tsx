@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -8,14 +8,26 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-interface AddExperienceDialogProps {
+interface ExperienceData {
+  id?: string;
+  role_title: string;
+  organization: string;
+  start_date: string;
+  end_date: string | null;
+  is_current: boolean;
+  description: string | null;
+  supervisor: string | null;
+}
+
+interface ExperienceDialogProps {
   profileId: string;
+  experience?: ExperienceData | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdate: () => void;
 }
 
-export function AddExperienceDialog({ profileId, open, onOpenChange, onUpdate }: AddExperienceDialogProps) {
+export function ExperienceDialog({ profileId, experience, open, onOpenChange, onUpdate }: ExperienceDialogProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     role_title: "",
@@ -27,27 +39,62 @@ export function AddExperienceDialog({ profileId, open, onOpenChange, onUpdate }:
     supervisor: "",
   });
 
+  const isEditing = !!experience?.id;
+
+  useEffect(() => {
+    if (experience) {
+      setFormData({
+        role_title: experience.role_title || "",
+        organization: experience.organization || "",
+        start_date: experience.start_date || "",
+        end_date: experience.end_date || "",
+        is_current: experience.is_current || false,
+        description: experience.description || "",
+        supervisor: experience.supervisor || "",
+      });
+    } else {
+      setFormData({
+        role_title: "",
+        organization: "",
+        start_date: "",
+        end_date: "",
+        is_current: false,
+        description: "",
+        supervisor: "",
+      });
+    }
+  }, [experience, open]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = await supabase.from("experiences").insert([
-        {
-          user_id: profileId,
-          role_title: formData.role_title,
-          organization: formData.organization,
-          start_date: formData.start_date,
-          end_date: formData.is_current ? null : formData.end_date,
-          is_current: formData.is_current,
-          description: formData.description || null,
-          supervisor: formData.supervisor || null,
-        },
-      ]);
+      const data = {
+        role_title: formData.role_title,
+        organization: formData.organization,
+        start_date: formData.start_date,
+        end_date: formData.is_current ? null : formData.end_date || null,
+        is_current: formData.is_current,
+        description: formData.description || null,
+        supervisor: formData.supervisor || null,
+      };
 
-      if (error) throw error;
+      if (isEditing && experience?.id) {
+        const { error } = await supabase
+          .from("experiences")
+          .update(data)
+          .eq("id", experience.id);
+        if (error) throw error;
+        toast.success("Experience updated successfully");
+      } else {
+        const { error } = await supabase.from("experiences").insert([
+          { ...data, user_id: profileId },
+        ]);
+        if (error) throw error;
+        toast.success("Experience added successfully");
+      }
 
-      toast.success("Experience added successfully");
       onUpdate();
       onOpenChange(false);
     } catch (error: any) {
@@ -61,7 +108,7 @@ export function AddExperienceDialog({ profileId, open, onOpenChange, onUpdate }:
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="sm:max-w-[600px]">
         <DialogHeader>
-          <DialogTitle>Add Experience</DialogTitle>
+          <DialogTitle>{isEditing ? "Edit Experience" : "Add Experience"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -137,7 +184,7 @@ export function AddExperienceDialog({ profileId, open, onOpenChange, onUpdate }:
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Adding..." : "Add Experience"}
+              {loading ? "Saving..." : isEditing ? "Save Changes" : "Add Experience"}
             </Button>
           </div>
         </form>
