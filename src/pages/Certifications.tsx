@@ -4,7 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Plus, Filter } from "lucide-react";
-import { AddCertificationDialog } from "@/components/profile/AddCertificationDialog";
+import { CertificationDialog } from "@/components/profile/CertificationDialog";
 import { CertificationProgress } from "@/components/certifications/CertificationProgress";
 import { CertificationBadgeGrid } from "@/components/certifications/CertificationBadgeGrid";
 import { CertificationTable } from "@/components/certifications/CertificationTable";
@@ -148,8 +148,9 @@ export default function Certifications() {
         </Card>
       </div>
 
-      <AddCertificationDialog
+      <CertificationDialog
         profileId={user?.id || ""}
+        certification={null}
         open={showAddDialog}
         onOpenChange={setShowAddDialog}
         onUpdate={handleCertificationAdded}

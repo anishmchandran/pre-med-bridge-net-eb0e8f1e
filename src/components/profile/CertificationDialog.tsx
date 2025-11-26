@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -7,14 +7,23 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
-interface AddCertificationDialogProps {
+interface CertificationData {
+  id?: string;
+  certification_type: string;
+  certification_name: string;
+  issue_date: string | null;
+  expiration_date: string | null;
+}
+
+interface CertificationDialogProps {
   profileId: string;
+  certification?: CertificationData | null;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onUpdate: () => void;
 }
 
-export function AddCertificationDialog({ profileId, open, onOpenChange, onUpdate }: AddCertificationDialogProps) {
+export function CertificationDialog({ profileId, certification, open, onOpenChange, onUpdate }: CertificationDialogProps) {
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     certification_type: "",
@@ -23,25 +32,53 @@ export function AddCertificationDialog({ profileId, open, onOpenChange, onUpdate
     expiration_date: "",
   });
 
+  const isEditing = !!certification?.id;
+
+  useEffect(() => {
+    if (certification) {
+      setFormData({
+        certification_type: certification.certification_type || "",
+        certification_name: certification.certification_name || "",
+        issue_date: certification.issue_date || "",
+        expiration_date: certification.expiration_date || "",
+      });
+    } else {
+      setFormData({
+        certification_type: "",
+        certification_name: "",
+        issue_date: "",
+        expiration_date: "",
+      });
+    }
+  }, [certification, open]);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const { error } = await supabase.from("certifications").insert([
-        {
-          user_id: profileId,
-          certification_type: formData.certification_type,
-          certification_name: formData.certification_name,
-          issue_date: formData.issue_date || null,
-          expiration_date: formData.expiration_date || null,
-          verified: false,
-        },
-      ]);
+      const data = {
+        certification_type: formData.certification_type,
+        certification_name: formData.certification_name,
+        issue_date: formData.issue_date || null,
+        expiration_date: formData.expiration_date || null,
+      };
 
-      if (error) throw error;
+      if (isEditing && certification?.id) {
+        const { error } = await supabase
+          .from("certifications")
+          .update(data)
+          .eq("id", certification.id);
+        if (error) throw error;
+        toast.success("Certification updated successfully");
+      } else {
+        const { error } = await supabase.from("certifications").insert([
+          { ...data, user_id: profileId, verified: false },
+        ]);
+        if (error) throw error;
+        toast.success("Certification added successfully");
+      }
 
-      toast.success("Certification added successfully");
       onUpdate();
       onOpenChange(false);
     } catch (error: any) {
@@ -55,7 +92,7 @@ export function AddCertificationDialog({ profileId, open, onOpenChange, onUpdate
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add Certification</DialogTitle>
+          <DialogTitle>{isEditing ? "Edit Certification" : "Add Certification"}</DialogTitle>
         </DialogHeader>
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
@@ -72,6 +109,8 @@ export function AddCertificationDialog({ profileId, open, onOpenChange, onUpdate
                 <SelectItem value="CITI">CITI Human Subjects</SelectItem>
                 <SelectItem value="HIPAA">HIPAA Training</SelectItem>
                 <SelectItem value="BBP">Bloodborne Pathogens</SelectItem>
+                <SelectItem value="GCP">Good Clinical Practice</SelectItem>
+                <SelectItem value="IRB">IRB Training</SelectItem>
                 <SelectItem value="Other">Other</SelectItem>
               </SelectContent>
             </Select>
@@ -110,7 +149,7 @@ export function AddCertificationDialog({ profileId, open, onOpenChange, onUpdate
               Cancel
             </Button>
             <Button type="submit" disabled={loading}>
-              {loading ? "Adding..." : "Add Certification"}
+              {loading ? "Saving..." : isEditing ? "Save Changes" : "Add Certification"}
             </Button>
           </div>
         </form>

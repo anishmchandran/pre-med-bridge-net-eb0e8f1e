@@ -97,7 +97,7 @@ export default function Profile() {
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
           {/* Left Sidebar */}
           <aside className="lg:col-span-3 space-y-6">
-            <ContactSection profile={profile} isOwnProfile={isOwnProfile} />
+            <ContactSection profile={profile} isOwnProfile={isOwnProfile} onUpdate={loadProfile} />
             <ResearchInterestsSection 
               profileId={profile?.id} 
               interests={profile?.research_focus}
