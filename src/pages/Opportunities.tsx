@@ -5,10 +5,11 @@ import Navigation from "@/components/Navigation";
 import OpportunityCard from "@/components/opportunities/OpportunityCard";
 import EnhancedFiltersPanel, { EnhancedFilters } from "@/components/opportunities/EnhancedFiltersPanel";
 import { Input } from "@/components/ui/input";
-import { Search, Loader2, SlidersHorizontal } from "lucide-react";
+import { Search, Loader2, SlidersHorizontal, Sparkles, TrendingUp, Target } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
+import { Badge } from "@/components/ui/badge";
 
 export interface Opportunity {
   id: string;
@@ -266,10 +267,14 @@ const Opportunities = () => {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background">
+      <div className="min-h-screen bg-background bg-mesh">
         <Navigation />
-        <div className="flex items-center justify-center h-[calc(100vh-80px)]">
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+        <div className="flex flex-col items-center justify-center h-[calc(100vh-80px)] gap-4">
+          <div className="relative">
+            <div className="absolute inset-0 rounded-full bg-accent/20 animate-ping" />
+            <Loader2 className="h-12 w-12 animate-spin text-accent relative z-10" />
+          </div>
+          <p className="text-muted-foreground animate-pulse-soft">Loading opportunities...</p>
         </div>
       </div>
     );
@@ -277,88 +282,132 @@ const Opportunities = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      {/* Background Effects */}
+      <div className="fixed inset-0 bg-mesh pointer-events-none" />
+      <div className="fixed top-0 right-0 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
+      <div className="fixed bottom-0 left-0 w-[500px] h-[500px] bg-primary/5 rounded-full blur-[100px] pointer-events-none" />
+      
       <Navigation />
       
-      <div className="container py-8">
-        <div className="mb-8">
-          <h1 className="text-4xl font-bold text-foreground mb-2">Find Opportunities</h1>
-          <p className="text-muted-foreground">
-            Discover research, clinical, and volunteer positions tailored to your skills
+      <div className="container py-8 relative z-10">
+        {/* Hero Section */}
+        <div className="mb-10 animate-fade-in">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="p-2 rounded-xl bg-accent/10 border border-accent/20">
+              <Target className="h-6 w-6 text-accent" />
+            </div>
+            <Badge variant="outline" className="bg-accent/5 border-accent/30 text-accent animate-glow-pulse">
+              <Sparkles className="h-3 w-3 mr-1" />
+              {opportunities.length} Active Opportunities
+            </Badge>
+          </div>
+          
+          <h1 className="text-4xl md:text-5xl font-bold text-foreground mb-3">
+            Find Your{" "}
+            <span className="gradient-text">Perfect Opportunity</span>
+          </h1>
+          <p className="text-lg text-muted-foreground max-w-2xl">
+            Discover research, clinical, and volunteer positions tailored to your skills and interests
           </p>
         </div>
 
         {/* Search Bar with Mobile Filter Toggle */}
-        <div className="flex gap-3 mb-6">
+        <div className="flex gap-3 mb-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <div className="relative flex-1">
-            <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground h-5 w-5" />
+            <div className="absolute left-4 top-1/2 transform -translate-y-1/2 p-1.5 rounded-lg bg-accent/10">
+              <Search className="text-accent h-4 w-4" />
+            </div>
             <Input
               type="text"
               placeholder="Search by keywords, lab name, institution..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              className="pl-10"
+              className="pl-14 h-12 glass-card border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
             />
           </div>
           
           {/* Mobile Filter Button */}
           <Sheet open={mobileFiltersOpen} onOpenChange={setMobileFiltersOpen}>
             <SheetTrigger asChild>
-              <Button variant="outline" className="lg:hidden relative">
-                <SlidersHorizontal className="h-5 w-5" />
+              <Button 
+                variant="outline" 
+                className="lg:hidden relative h-12 px-4 glass-card border-border/50 hover:border-accent/50 hover:bg-accent/5 transition-all duration-300"
+              >
+                <SlidersHorizontal className="h-5 w-5 text-accent" />
                 {activeFilterCount > 0 && (
-                  <span className="absolute -top-1 -right-1 h-5 w-5 bg-primary text-primary-foreground text-xs rounded-full flex items-center justify-center">
+                  <span className="absolute -top-2 -right-2 h-5 w-5 bg-accent text-accent-foreground text-xs rounded-full flex items-center justify-center animate-scale-in">
                     {activeFilterCount}
                   </span>
                 )}
               </Button>
             </SheetTrigger>
-            <SheetContent side="left" className="w-full sm:max-w-md p-0 overflow-y-auto">
+            <SheetContent side="left" className="w-full sm:max-w-md p-0 overflow-y-auto glass-effect border-r border-border/50">
               <EnhancedFiltersPanel filters={filters} setFilters={setFilters} />
             </SheetContent>
           </Sheet>
         </div>
 
         <Tabs defaultValue="all" className="w-full">
-          <TabsList className="mb-6">
-            <TabsTrigger value="all">
+          <TabsList className="mb-8 p-1 glass-card border-border/50 animate-fade-in" style={{ animationDelay: '150ms' }}>
+            <TabsTrigger 
+              value="all"
+              className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
+            >
+              <TrendingUp className="h-4 w-4 mr-2" />
               All Opportunities ({filteredOpportunities.length})
             </TabsTrigger>
-            <TabsTrigger value="saved">
+            <TabsTrigger 
+              value="saved"
+              className="data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
+            >
               Saved ({savedOpportunitiesList.length})
             </TabsTrigger>
           </TabsList>
 
-          <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
             {/* Filters Panel - Desktop */}
-            <div className="hidden lg:block lg:col-span-1">
-              <EnhancedFiltersPanel filters={filters} setFilters={setFilters} />
+            <div className="hidden lg:block lg:col-span-1 animate-slide-in-left">
+              <div className="sticky top-24">
+                <EnhancedFiltersPanel filters={filters} setFilters={setFilters} />
+              </div>
             </div>
 
             {/* Results Feed */}
             <div className="lg:col-span-3">
               <TabsContent value="all" className="mt-0">
                 {filteredOpportunities.length === 0 ? (
-                  <div className="text-center py-12 bg-accent/20 rounded-lg border border-border/50">
-                    <p className="text-muted-foreground">
-                      No opportunities found matching your criteria
+                  <div className="text-center py-16 floating-card animate-fade-in">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                      <Search className="h-8 w-8 text-accent/50" />
+                    </div>
+                    <p className="text-lg font-medium text-foreground mb-2">
+                      No opportunities found
+                    </p>
+                    <p className="text-muted-foreground mb-4">
+                      Try adjusting your filters or search terms
                     </p>
                     <Button 
-                      variant="link" 
+                      variant="outline" 
                       onClick={() => setFilters(defaultFilters)}
-                      className="mt-2"
+                      className="hover:bg-accent/10 hover:border-accent/50 transition-all duration-300"
                     >
                       Clear all filters
                     </Button>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {filteredOpportunities.map((opportunity) => (
-                      <OpportunityCard
+                  <div className="space-y-5">
+                    {filteredOpportunities.map((opportunity, index) => (
+                      <div 
                         key={opportunity.id}
-                        opportunity={opportunity}
-                        isSaved={savedOpportunities.includes(opportunity.id)}
-                        onSaveToggle={() => handleSaveToggle(opportunity.id)}
-                      />
+                        className="animate-fade-in"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <OpportunityCard
+                          opportunity={opportunity}
+                          isSaved={savedOpportunities.includes(opportunity.id)}
+                          onSaveToggle={() => handleSaveToggle(opportunity.id)}
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
@@ -366,20 +415,31 @@ const Opportunities = () => {
 
               <TabsContent value="saved" className="mt-0">
                 {savedOpportunitiesList.length === 0 ? (
-                  <div className="text-center py-12 bg-accent/20 rounded-lg border border-border/50">
+                  <div className="text-center py-16 floating-card animate-fade-in">
+                    <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-accent/10 flex items-center justify-center">
+                      <Sparkles className="h-8 w-8 text-accent/50" />
+                    </div>
+                    <p className="text-lg font-medium text-foreground mb-2">
+                      No saved opportunities yet
+                    </p>
                     <p className="text-muted-foreground">
-                      You haven't saved any opportunities yet
+                      Click the heart icon on any opportunity to save it for later
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4">
-                    {savedOpportunitiesList.map((opportunity) => (
-                      <OpportunityCard
+                  <div className="space-y-5">
+                    {savedOpportunitiesList.map((opportunity, index) => (
+                      <div 
                         key={opportunity.id}
-                        opportunity={opportunity}
-                        isSaved={true}
-                        onSaveToggle={() => handleSaveToggle(opportunity.id)}
-                      />
+                        className="animate-fade-in"
+                        style={{ animationDelay: `${index * 50}ms` }}
+                      >
+                        <OpportunityCard
+                          opportunity={opportunity}
+                          isSaved={true}
+                          onSaveToggle={() => handleSaveToggle(opportunity.id)}
+                        />
+                      </div>
                     ))}
                   </div>
                 )}
