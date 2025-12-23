@@ -1,13 +1,12 @@
 import { useState } from "react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Label } from "@/components/ui/label";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Badge } from "@/components/ui/badge";
 import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible";
-import { ChevronDown, X, MapPin, Clock, GraduationCap, FlaskConical, Laptop, Calendar, Filter } from "lucide-react";
+import { ChevronDown, X, MapPin, Clock, GraduationCap, FlaskConical, Laptop, Calendar, Filter, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export interface EnhancedFilters {
@@ -58,28 +57,44 @@ const FilterSection = ({
   title, 
   icon: Icon, 
   children, 
-  defaultOpen = false 
+  defaultOpen = false,
+  accentColor = "accent"
 }: { 
   title: string; 
   icon: React.ElementType; 
   children: React.ReactNode;
   defaultOpen?: boolean;
+  accentColor?: string;
 }) => {
   const [isOpen, setIsOpen] = useState(defaultOpen);
   
   return (
     <Collapsible open={isOpen} onOpenChange={setIsOpen}>
-      <CollapsibleTrigger className="flex items-center justify-between w-full py-3 px-4 hover:bg-accent/50 rounded-lg transition-colors group">
-        <div className="flex items-center gap-2">
-          <Icon className="h-4 w-4 text-primary" />
-          <span className="font-medium text-sm">{title}</span>
+      <CollapsibleTrigger className={cn(
+        "flex items-center justify-between w-full py-3.5 px-4 rounded-xl transition-all duration-300 group",
+        "hover:bg-accent/5 hover:shadow-sm",
+        isOpen && "bg-accent/5"
+      )}>
+        <div className="flex items-center gap-3">
+          <div className={cn(
+            "p-1.5 rounded-lg transition-all duration-300",
+            isOpen ? "bg-accent/20 text-accent" : "bg-muted text-muted-foreground group-hover:bg-accent/10 group-hover:text-accent"
+          )}>
+            <Icon className="h-4 w-4" />
+          </div>
+          <span className={cn(
+            "font-medium text-sm transition-colors duration-300",
+            isOpen ? "text-foreground" : "text-muted-foreground group-hover:text-foreground"
+          )}>
+            {title}
+          </span>
         </div>
         <ChevronDown className={cn(
-          "h-4 w-4 text-muted-foreground transition-transform duration-200",
-          isOpen && "rotate-180"
+          "h-4 w-4 text-muted-foreground transition-all duration-300",
+          isOpen && "rotate-180 text-accent"
         )} />
       </CollapsibleTrigger>
-      <CollapsibleContent className="px-4 pb-4 pt-2 space-y-3 animate-in slide-in-from-top-2 duration-200">
+      <CollapsibleContent className="px-4 pb-4 pt-2 space-y-3 animate-accordion-down">
         {children}
       </CollapsibleContent>
     </Collapsible>
@@ -99,11 +114,11 @@ const PillCheckbox = ({
     type="button"
     onClick={() => onChange(!checked)}
     className={cn(
-      "px-3 py-1.5 rounded-full text-xs font-medium transition-all duration-200",
-      "border hover:scale-105 active:scale-95",
+      "px-3.5 py-2 rounded-full text-xs font-medium transition-all duration-300 pill-interactive",
+      "border-2 shadow-sm",
       checked 
-        ? "bg-primary text-primary-foreground border-primary shadow-sm" 
-        : "bg-background text-foreground border-border hover:border-primary/50 hover:bg-accent"
+        ? "bg-accent text-accent-foreground border-accent shadow-glow" 
+        : "bg-card text-foreground border-border/60 hover:border-accent/40 hover:bg-accent/5"
     )}
   >
     {label}
@@ -221,63 +236,76 @@ const EnhancedFiltersPanel = ({ filters, setFilters }: EnhancedFiltersPanelProps
     filters.durations.length;
 
   return (
-    <Card className="sticky top-4 overflow-hidden border-border/50 shadow-sm">
+    <Card className="floating-card overflow-hidden border-0">
       {/* Header */}
-      <div className="flex items-center justify-between p-4 border-b border-border/50 bg-gradient-to-r from-background to-accent/20">
-        <div className="flex items-center gap-2">
-          <Filter className="h-5 w-5 text-primary" />
-          <span className="font-semibold">Filters</span>
+      <div className="relative p-5 border-b border-border/30">
+        {/* Gradient overlay */}
+        <div className="absolute inset-0 bg-gradient-to-r from-accent/5 via-transparent to-primary/5" />
+        
+        <div className="relative flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="p-2 rounded-xl bg-accent/10 border border-accent/20">
+              <Filter className="h-5 w-5 text-accent" />
+            </div>
+            <div>
+              <span className="font-semibold text-foreground">Filters</span>
+              {activeFilterCount > 0 && (
+                <Badge className="ml-2 bg-accent/10 text-accent border-accent/30 hover:bg-accent/20">
+                  <Sparkles className="h-3 w-3 mr-1" />
+                  {activeFilterCount} active
+                </Badge>
+              )}
+            </div>
+          </div>
           {activeFilterCount > 0 && (
-            <Badge variant="secondary" className="ml-1 bg-primary/10 text-primary">
-              {activeFilterCount}
-            </Badge>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={clearAllFilters}
+              className="h-8 px-3 text-muted-foreground hover:text-destructive hover:bg-destructive/10 transition-all duration-300"
+            >
+              <X className="h-4 w-4 mr-1" />
+              Clear
+            </Button>
           )}
         </div>
-        {activeFilterCount > 0 && (
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={clearAllFilters}
-            className="h-8 px-2 text-muted-foreground hover:text-foreground"
-          >
-            <X className="h-4 w-4 mr-1" />
-            Clear
-          </Button>
-        )}
       </div>
 
-      <CardContent className="p-0 divide-y divide-border/50">
+      <CardContent className="p-0 divide-y divide-border/30">
         {/* Location */}
         <FilterSection title="Location" icon={MapPin} defaultOpen>
-          <div className="grid grid-cols-2 gap-2">
-            <div>
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
               <Label className="text-xs text-muted-foreground">City</Label>
               <Input
                 placeholder="Any city"
                 value={filters.city}
                 onChange={(e) => setFilters(prev => ({ ...prev, city: e.target.value }))}
-                className="h-9 text-sm"
+                className="h-10 text-sm bg-muted/30 border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
               />
             </div>
-            <div>
+            <div className="space-y-1.5">
               <Label className="text-xs text-muted-foreground">State</Label>
               <Input
                 placeholder="Any state"
                 value={filters.state}
                 onChange={(e) => setFilters(prev => ({ ...prev, state: e.target.value }))}
-                className="h-9 text-sm"
+                className="h-10 text-sm bg-muted/30 border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
               />
             </div>
           </div>
-          <div>
-            <Label className="text-xs text-muted-foreground">Within {filters.radiusMiles} miles</Label>
+          <div className="space-y-2">
+            <div className="flex items-center justify-between">
+              <Label className="text-xs text-muted-foreground">Search Radius</Label>
+              <span className="text-xs font-medium text-accent">{filters.radiusMiles} miles</span>
+            </div>
             <Slider
               value={[filters.radiusMiles]}
               onValueChange={([value]) => setFilters(prev => ({ ...prev, radiusMiles: value }))}
               max={200}
               min={5}
               step={5}
-              className="mt-2"
+              className="[&_[role=slider]]:bg-accent [&_[role=slider]]:border-accent [&_[role=slider]]:shadow-glow"
             />
           </div>
         </FilterSection>
@@ -340,7 +368,7 @@ const EnhancedFiltersPanel = ({ filters, setFilters }: EnhancedFiltersPanelProps
 
         {/* Time Commitment */}
         <FilterSection title="Weekly Time Commitment" icon={Clock}>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div className="flex items-center gap-2">
               <Input
                 type="number"
@@ -348,7 +376,7 @@ const EnhancedFiltersPanel = ({ filters, setFilters }: EnhancedFiltersPanelProps
                 max={40}
                 value={filters.minHoursPerWeek}
                 onChange={(e) => setFilters(prev => ({ ...prev, minHoursPerWeek: Number(e.target.value) }))}
-                className="h-9 w-20 text-sm"
+                className="h-10 w-20 text-sm text-center bg-muted/30 border-border/50 focus:border-accent/50"
               />
               <span className="text-sm text-muted-foreground">to</span>
               <Input
@@ -357,7 +385,7 @@ const EnhancedFiltersPanel = ({ filters, setFilters }: EnhancedFiltersPanelProps
                 max={40}
                 value={filters.maxHoursPerWeek}
                 onChange={(e) => setFilters(prev => ({ ...prev, maxHoursPerWeek: Number(e.target.value) }))}
-                className="h-9 w-20 text-sm"
+                className="h-10 w-20 text-sm text-center bg-muted/30 border-border/50 focus:border-accent/50"
               />
               <span className="text-sm text-muted-foreground">hrs/week</span>
             </div>
@@ -371,6 +399,7 @@ const EnhancedFiltersPanel = ({ filters, setFilters }: EnhancedFiltersPanelProps
               max={40}
               min={0}
               step={1}
+              className="[&_[role=slider]]:bg-accent [&_[role=slider]]:border-accent"
             />
           </div>
         </FilterSection>
@@ -391,7 +420,7 @@ const EnhancedFiltersPanel = ({ filters, setFilters }: EnhancedFiltersPanelProps
 
         {/* Minimum Requirements */}
         <FilterSection title="Requirements" icon={GraduationCap}>
-          <div className="space-y-3">
+          <div className="space-y-4">
             <div>
               <Label className="text-xs text-muted-foreground mb-2 block">Minimum Year in School</Label>
               <div className="flex flex-wrap gap-2">

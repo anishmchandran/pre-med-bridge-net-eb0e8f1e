@@ -6,7 +6,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useToast } from "@/hooks/use-toast";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Loader2, CheckCircle2 } from "lucide-react";
+import { Loader2, CheckCircle2, Sparkles, ArrowRight, Mail, Lock, User } from "lucide-react";
 import logoWordmark from "@/assets/logo-wordmark.png";
 
 const Auth = () => {
@@ -144,130 +144,184 @@ const Auth = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-background via-background to-accent/20 px-4">
-      <div className="w-full max-w-md space-y-8">
+    <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4">
+      {/* Background Effects */}
+      <div className="fixed inset-0 bg-mesh" />
+      <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-accent/10 rounded-full blur-[150px] pointer-events-none animate-pulse-soft" />
+      <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse-soft" style={{ animationDelay: '1s' }} />
+      
+      {/* Floating Particles */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden">
+        <div className="absolute top-1/4 left-1/4 w-2 h-2 bg-accent/30 rounded-full animate-float" />
+        <div className="absolute top-3/4 right-1/4 w-3 h-3 bg-primary/20 rounded-full animate-float" style={{ animationDelay: '1s' }} />
+        <div className="absolute top-1/2 right-1/3 w-1.5 h-1.5 bg-accent/40 rounded-full animate-float" style={{ animationDelay: '2s' }} />
+      </div>
+      
+      <div className="w-full max-w-md space-y-8 relative z-10">
         {/* Logo and Header */}
-        <div className="text-center animate-in fade-in slide-in-from-top-4 duration-500">
-          <img src={logoWordmark} alt="MedBridge" className="h-12 mx-auto mb-6" />
-          <h1 className="text-3xl font-bold text-foreground">Welcome to MedBridge</h1>
-          <p className="text-muted-foreground mt-2">Connect with research opportunities</p>
+        <div className="text-center animate-fade-in">
+          <div className="inline-flex items-center justify-center p-3 mb-6 rounded-2xl bg-card/80 backdrop-blur-xl border border-border/50 shadow-premium-lg">
+            <img src={logoWordmark} alt="MedBridge" className="h-10" />
+          </div>
+          <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-2">
+            Welcome to <span className="gradient-text">MedBridge</span>
+          </h1>
+          <p className="text-muted-foreground">Connect with research opportunities that matter</p>
         </div>
 
         {/* Auth Card */}
-        <div className="bg-card border border-border/50 rounded-xl shadow-lg p-6 animate-in fade-in slide-in-from-bottom-4 duration-500 delay-150">
+        <div className="floating-card p-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-6">
-              <TabsTrigger value="signin" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+            <TabsList className="grid w-full grid-cols-2 mb-8 p-1 bg-muted/50 rounded-xl">
+              <TabsTrigger 
+                value="signin" 
+                className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
+              >
                 Sign In
               </TabsTrigger>
-              <TabsTrigger value="signup" className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground">
+              <TabsTrigger 
+                value="signup" 
+                className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
+              >
                 Sign Up
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="signin" className="space-y-4 mt-0">
-              <form onSubmit={handleSignIn} className="space-y-4">
+            <TabsContent value="signin" className="space-y-5 mt-0">
+              <form onSubmit={handleSignIn} className="space-y-5">
                 <div className="space-y-2">
-                  <Label htmlFor="signin-email">Email</Label>
-                  <Input
-                    id="signin-email"
-                    type="email"
-                    placeholder="your.email@university.edu"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="signin-password">Password</Label>
-                  <Input
-                    id="signin-password"
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                  />
-                </div>
-
-                <Button 
-                  type="submit" 
-                  className="w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]" 
-                  disabled={loading}
-                >
-                  {loading ? (
-                    <>
-                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                      Signing in...
-                    </>
-                  ) : (
-                    "Sign In"
-                  )}
-                </Button>
-              </form>
-            </TabsContent>
-
-            <TabsContent value="signup" className="space-y-4 mt-0">
-              {signUpSuccess ? (
-                <div className="text-center py-8 space-y-4 animate-in fade-in zoom-in duration-300">
-                  <CheckCircle2 className="h-16 w-16 text-green-500 mx-auto" />
-                  <h3 className="text-lg font-semibold">Check your email!</h3>
-                  <p className="text-muted-foreground text-sm">
-                    We've sent a confirmation link to <span className="font-medium text-foreground">{email}</span>. 
-                    Click the link to complete your signup.
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    onClick={() => setSignUpSuccess(false)}
-                    className="mt-4"
-                  >
-                    Back to Sign Up
-                  </Button>
-                </div>
-              ) : (
-                <form onSubmit={handleSignUp} className="space-y-4">
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-name">Full Name</Label>
+                  <Label htmlFor="signin-email" className="text-sm font-medium">Email</Label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-accent/10">
+                      <Mail className="h-4 w-4 text-accent" />
+                    </div>
                     <Input
-                      id="signup-name"
-                      type="text"
-                      placeholder="John Doe"
-                      value={fullName}
-                      onChange={(e) => setFullName(e.target.value)}
-                      required
-                      className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                    />
-                  </div>
-
-                  <div className="space-y-2">
-                    <Label htmlFor="signup-email">Email</Label>
-                    <Input
-                      id="signup-email"
+                      id="signin-email"
                       type="email"
                       placeholder="your.email@university.edu"
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
                       required
-                      className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
+                      className="pl-12 h-12 bg-muted/30 border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
                     />
-                    <p className="text-xs text-muted-foreground">
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="signin-password" className="text-sm font-medium">Password</Label>
+                  <div className="relative">
+                    <div className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-accent/10">
+                      <Lock className="h-4 w-4 text-accent" />
+                    </div>
+                    <Input
+                      id="signin-password"
+                      type="password"
+                      value={password}
+                      onChange={(e) => setPassword(e.target.value)}
+                      required
+                      className="pl-12 h-12 bg-muted/30 border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
+                    />
+                  </div>
+                </div>
+
+                <Button 
+                  type="submit" 
+                  className="w-full h-12 bg-gradient-to-r from-accent to-accent-light hover:from-accent-hover hover:to-accent text-accent-foreground font-medium shadow-glow transition-all duration-300 group" 
+                  disabled={loading}
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+                      Signing in...
+                    </>
+                  ) : (
+                    <>
+                      Sign In
+                      <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </TabsContent>
+
+            <TabsContent value="signup" className="space-y-5 mt-0">
+              {signUpSuccess ? (
+                <div className="text-center py-8 space-y-4 animate-scale-in">
+                  <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-green-500/10 border border-green-500/30 mb-2">
+                    <CheckCircle2 className="h-10 w-10 text-green-500" />
+                  </div>
+                  <h3 className="text-xl font-semibold text-foreground">Check your email!</h3>
+                  <p className="text-muted-foreground">
+                    We've sent a confirmation link to{" "}
+                    <span className="font-medium text-foreground">{email}</span>. 
+                    Click the link to complete your signup.
+                  </p>
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setSignUpSuccess(false)}
+                    className="mt-4 hover:bg-accent/10 hover:border-accent/50 transition-all duration-300"
+                  >
+                    Back to Sign Up
+                  </Button>
+                </div>
+              ) : (
+                <form onSubmit={handleSignUp} className="space-y-5">
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-name" className="text-sm font-medium">Full Name</Label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-accent/10">
+                        <User className="h-4 w-4 text-accent" />
+                      </div>
+                      <Input
+                        id="signup-name"
+                        type="text"
+                        placeholder="John Doe"
+                        value={fullName}
+                        onChange={(e) => setFullName(e.target.value)}
+                        required
+                        className="pl-12 h-12 bg-muted/30 border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="signup-email" className="text-sm font-medium">Email</Label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-accent/10">
+                        <Mail className="h-4 w-4 text-accent" />
+                      </div>
+                      <Input
+                        id="signup-email"
+                        type="email"
+                        placeholder="your.email@university.edu"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        required
+                        className="pl-12 h-12 bg-muted/30 border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
+                      />
+                    </div>
+                    <p className="text-xs text-muted-foreground flex items-center gap-1">
+                      <Sparkles className="h-3 w-3" />
                       Use your .edu email for the best experience
                     </p>
                   </div>
 
                   <div className="space-y-2">
-                    <Label htmlFor="signup-password">Password</Label>
-                    <Input
-                      id="signup-password"
-                      type="password"
-                      value={password}
-                      onChange={(e) => setPassword(e.target.value)}
-                      required
-                      minLength={6}
-                      className="transition-all duration-200 focus:ring-2 focus:ring-primary/20"
-                    />
+                    <Label htmlFor="signup-password" className="text-sm font-medium">Password</Label>
+                    <div className="relative">
+                      <div className="absolute left-3 top-1/2 -translate-y-1/2 p-1.5 rounded-lg bg-accent/10">
+                        <Lock className="h-4 w-4 text-accent" />
+                      </div>
+                      <Input
+                        id="signup-password"
+                        type="password"
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required
+                        minLength={6}
+                        className="pl-12 h-12 bg-muted/30 border-border/50 focus:border-accent/50 focus:ring-2 focus:ring-accent/20 transition-all duration-300"
+                      />
+                    </div>
                     <p className="text-xs text-muted-foreground">
                       Must be at least 6 characters
                     </p>
@@ -275,16 +329,19 @@ const Auth = () => {
 
                   <Button 
                     type="submit" 
-                    className="w-full transition-all duration-200 hover:scale-[1.02] active:scale-[0.98]" 
+                    className="w-full h-12 bg-gradient-to-r from-accent to-accent-light hover:from-accent-hover hover:to-accent text-accent-foreground font-medium shadow-glow transition-all duration-300 group" 
                     disabled={loading}
                   >
                     {loading ? (
                       <>
-                        <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                        <Loader2 className="mr-2 h-5 w-5 animate-spin" />
                         Creating account...
                       </>
                     ) : (
-                      "Create Account"
+                      <>
+                        Create Account
+                        <ArrowRight className="ml-2 h-5 w-5 transition-transform duration-300 group-hover:translate-x-1" />
+                      </>
                     )}
                   </Button>
                 </form>
@@ -294,7 +351,7 @@ const Auth = () => {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-muted-foreground animate-in fade-in duration-500 delay-300">
+        <p className="text-center text-xs text-muted-foreground animate-fade-in" style={{ animationDelay: '200ms' }}>
           By signing up, you agree to our Terms of Service and Privacy Policy
         </p>
       </div>
