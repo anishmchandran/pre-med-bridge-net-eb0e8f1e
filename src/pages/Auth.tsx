@@ -172,16 +172,16 @@ const Auth = () => {
         {/* Auth Card */}
         <div className="floating-card p-8 animate-fade-in" style={{ animationDelay: '100ms' }}>
           <Tabs defaultValue="signin" className="w-full">
-            <TabsList className="grid w-full grid-cols-2 mb-8 p-1 bg-muted/50 rounded-xl">
+            <TabsList className="grid w-full grid-cols-2 mb-8 p-1 bg-muted/50 rounded-xl relative z-10">
               <TabsTrigger 
                 value="signin" 
-                className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
+                className="rounded-lg cursor-pointer data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
               >
                 Sign In
               </TabsTrigger>
               <TabsTrigger 
                 value="signup" 
-                className="rounded-lg data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
+                className="rounded-lg cursor-pointer data-[state=active]:bg-accent data-[state=active]:text-accent-foreground data-[state=active]:shadow-glow transition-all duration-300"
               >
                 Sign Up
               </TabsTrigger>
