@@ -146,7 +146,7 @@ const Auth = () => {
   return (
     <div className="min-h-screen flex items-center justify-center relative overflow-hidden px-4">
       {/* Background Effects */}
-      <div className="fixed inset-0 bg-mesh" />
+      <div className="fixed inset-0 bg-mesh pointer-events-none" />
       <div className="fixed top-0 right-0 w-[800px] h-[800px] bg-accent/10 rounded-full blur-[150px] pointer-events-none animate-pulse-soft" />
       <div className="fixed bottom-0 left-0 w-[600px] h-[600px] bg-primary/10 rounded-full blur-[120px] pointer-events-none animate-pulse-soft" style={{ animationDelay: '1s' }} />
       
